@@ -84,12 +84,10 @@ int main(void) {
 	MX_SAI1_Init();
 	MX_CRC_Init();
 	MX_PDM2PCM_Init();
-//	s_initUSB();
 
 	set_audio_ip_hdle();
 	VoiceUI_usr_thf_init();
 	AudioCapture_start(pHdleAudioIp);
-	//AudioCapture_SetRingBuffer(pHdleAudioIp);
 
 	while (1) {
 		/* USER CODE END WHILE */
@@ -138,21 +136,6 @@ void SystemClock_Config(void) {
 	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_2) != HAL_OK) {
 		Error_Handler();
 	}
-//	PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_USART3
-//			| RCC_PERIPHCLK_SAI1;
-//	PeriphClkInitStruct.PLLSAI.PLLSAIN = 128;
-//	PeriphClkInitStruct.PLLSAI.PLLSAIR = 2;
-//	PeriphClkInitStruct.PLLSAI.PLLSAIQ = 5;
-//	PeriphClkInitStruct.PLLSAI.PLLSAIP = RCC_PLLSAIP_DIV2;
-//	PeriphClkInitStruct.PLLSAIDivQ = 1;
-//	PeriphClkInitStruct.PLLSAIDivR = RCC_PLLSAIDIVR_2;
-//	PeriphClkInitStruct.Sai1ClockSelection = RCC_SAI1CLKSOURCE_PLLSAI;
-//	PeriphClkInitStruct.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
-////	PeriphClkInitStruct.Clk48ClockSelection = RCC_CLK48SOURCE_PLL;
-//	if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) {
-//		Error_Handler();
-//	}
-
 
 	  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_SAI1 |RCC_PERIPHCLK_USART3;
 	  PeriphClkInitStruct.PLLSAI.PLLSAIN = 128;
@@ -277,13 +260,8 @@ void MX_USART3_UART_Init(void) {
 static void MX_DMA_Init(void) {
 
 	/* DMA controller clock enable */
-//	__HAL_RCC_DMA1_CLK_ENABLE();
 	__HAL_RCC_DMA2_CLK_ENABLE();
 	/* DMA interrupt init */
-
-	/*	 DMA1_Stream0_IRQn interrupt configuration
-	 HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 7, 0);
-	 HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);*/
 
 	/* DMA2_Stream1_IRQn interrupt configuration */
 	HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 7, 0);
@@ -308,22 +286,6 @@ static void MX_GPIO_Init(void) {
 
 }
 
-static void s_initUSB(void) {
-#if defined(USBD_AUDIO_OUT_USED) || defined(USBD_AUDIO_IN_USED)
-	/* Init Device Library */
-	USBD_AUDIO_Init_Microphone_Descriptor(&hUSBDDevice, 16000, 1);
-
-	USBD_Init(&hUSBDDevice, &AUDIO_Desc, 0);
-	/* Add Supported Class */
-	USBD_RegisterClass(&hUSBDDevice, &USBD_AUDIO);
-	/* Add Interface callbacks for AUDIO Class */
-	USBD_AUDIO_RegisterInterface(&hUSBDDevice, &USBD_AUDIO_fops);
-	/* Start Device Process */
-	USBD_Start(&hUSBDDevice);
-#endif
-}
-
-/* USER CODE BEGIN 4 */
 
 static void set_audio_ip_hdle(void) {
 	pHdleAudioIp = (void*) &hsai_BlockA1;
