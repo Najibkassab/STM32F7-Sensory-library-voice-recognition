@@ -49,7 +49,6 @@ static void MX_USART3_UART_Init(void);
 static void MX_SAI1_Init(void);
 static void MX_CRC_Init(void);
 static void set_audio_ip_hdle(void);
-static void s_initUSB(void);
 /* Private user code ---------------------------------------------------------*/
 
 /**
